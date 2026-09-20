@@ -20,6 +20,9 @@ def main():
     datas=load_json(file_name)
     title=input("タイトルを入力してください:")
     url=input("urlを入力してください:")
+    if not title or not url:
+        print("書き込みしませんでした")
+        return 1
     id=get_id(url)
     data={"id":id, "title":title, "url":url}
     datas.insert(1,data)
