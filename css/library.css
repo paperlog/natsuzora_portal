@@ -27,12 +27,11 @@ body {
 }
 
 .top-bar {
-  width: 100%;
-  max-width: 900px;
+  width: min(900px, calc(100% - 32px));
+  margin: 30px auto 14px; /* 上部余白と左右中央揃えを追加 */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
   flex-wrap: wrap;
   gap: 10px;
 }
@@ -84,13 +83,12 @@ body {
 }
 
 .pager-bar {
-  width: 100%;
-  max-width: 900px;
+  width: min(900px, calc(100% - 32px));
+  margin: 0 auto 14px; /* 左右中央揃えを追加 */
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 6px;
-  margin-bottom: 14px;
   flex-wrap: wrap;
 }
 
@@ -118,9 +116,13 @@ body {
   cursor: not-allowed;
 }
 
+#pagerBottom {
+  margin-bottom: 50px;
+}
+
 .card-wrapper {
-  width: 100%;
-  max-width: 900px;
+  width: min(900px, calc(100% - 32px));
+  margin: 0 auto; /* 左右中央揃えを追加 */
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   overflow: hidden;
