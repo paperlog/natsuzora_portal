@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>夏空学園 図書室 TikTok視聴読破カード</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- CSSの読み込み -->
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/library.css">
+</head>
+<body>
+  <!-- 共通ヘッダー -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="school-badge">
+        <span class="badge-icon">🌻</span>
+        <span class="badge-text">PRIVATE NATSUZORA ACADEMY</span>
+      </div>
+      <h1 class="header-title">夏空学園 図書室</h1>
+      <p class="header-subtitle">TikTok視聴読破カード</p>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html">🏫 ポータル</a>
+      <a href="student_id_card.html">🏛️ 学務課（学生証）</a>
+      <a href="library.html" class="active">📚 図書室</a>
+    </nav>
+  </header>
+
+  <!-- トップバー -->
+  <div class="top-bar">
+    <div class="sync-status">
+      <span class="sync-dot"></span>
+      <span id="statusText">動画一覧を読み込み中…</span>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="saveAsImage()">📷 このカードを画像保存</button>
+      <button class="btn" onclick="clearMyData()">記録をクリア</button>
+    </div>
+  </div>
+
+  <!-- ページャー（上部） -->
+  <div class="pager-bar" id="pagerTop"></div>
+
+  <!-- 図書カード本体（10件分） -->
+  <div class="card-wrapper" id="captureTarget">
+    <div class="library-card">
+      <div class="card-header">
+        <div class="school-title">夏空学園 図書委員会公認</div>
+        <h1 class="card-title">TikTok視聴読破カード</h1>
+        <div class="card-volume-tag" id="volumeTag">（ 読み込み中… ）</div>
+        
+        <div class="student-info-grid">
+          <div class="info-item">
+            <span class="info-label">所 属:</span>
+            <input type="text" id="deptInput" class="info-input" placeholder="例: 3年B組 / 生徒会" oninput="saveUserData()">
+          </div>
+          <div class="info-item">
+            <span class="info-label">出席番号:</span>
+            <input type="text" id="numInput" class="info-input" placeholder="例: 9999" oninput="saveUserData()">
+          </div>
+          <div class="info-item">
+            <span class="info-label">氏 名:</span>
+            <input type="text" id="nameInput" class="info-input" placeholder="例: ユーザー" oninput="saveUserData()">
+          </div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="record-table">
+          <thead>
+            <tr>
+              <th class="col-no">No.</th>
+              <th class="col-date">視聴日付</th>
+              <th class="col-title">動画標題（TikTokタイトル）</th>
+              <th class="col-stamp">検印</th>
+              <th class="col-note">所感・備考</th>
+            </tr>
+          </thead>
+          <tbody id="recordTbody">
+            <tr>
+              <td colspan="5" class="empty-message">videos.json を読み込んでいます…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ページャー（下部） -->
+  <div class="pager-bar" id="pagerBottom" style="margin-top: 18px;"></div>
+
+  <script>
+    const USER_STORAGE_KEY = 'natsuzora_tiktok_card_v4_full';
+    const ITEMS_PER_PAGE = 10;
+    let currentPage = 1;
+    let videoCatalog = [];
+
+    let userData = {
+      profile: { department: '', studentNumber: '', name: '' },
+      records: {}
+    };
+
+    function playStampSound() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(140, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(35, ctx.currentTime + 0.12);
+
+        gain.gain.setValueAtTime(0.7, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.12);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.13);
+      } catch (e) {}
+    }
+
+    function getTodayString() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    async function initApp() {
+      const savedUser = localStorage.getItem(USER_STORAGE_KEY);
+      if (savedUser) {
+        try { userData = JSON.parse(savedUser); } catch (e) {}
+      }
+
+      try {
+        const res = await fetch('./videos.json?t=' + Date.now());
+        if (!res.ok) throw new Error('Failed to load videos.json');
+        videoCatalog = await res.json();
+      } catch (e) {
+        console.error('videos.json loading error:', e);
+        document.getElementById('statusText').textContent = 'videos.json の読み込みに失敗しました';
+        document.getElementById('recordTbody').innerHTML = `
+          <tr>
+            <td colspan="5" class="empty-message" style="color: #c9352b;">
+              動画リスト（videos.json）を取得できませんでした。<br>
+              リポジトリのルートに videos.json が配置されているかご確認ください。
+            </td>
+          </tr>`;
+        return;
+      }
+
+      renderUI();
+    }
+
+    function saveUserData() {
+      userData.profile.department = document.getElementById('deptInput').value;
+      userData.profile.studentNumber = document.getElementById('numInput').value;
+      userData.profile.name = document.getElementById('nameInput').value;
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
+      updateStampedCount();
+    }
+
+    function updateStampedCount() {
+      const count = Object.values(userData.records).filter(r => r && r.isStamped).length;
+      document.getElementById('statusText').innerHTML = `全${videoCatalog.length}件中 <strong style="color: #fff; margin: 0 3px;">${count}</strong> 件読破`;
+    }
+
+    function getTotalPages() {
+      return Math.ceil(videoCatalog.length / ITEMS_PER_PAGE) || 1;
+    }
+
+    function setPage(page) {
+      const totalPages = getTotalPages();
+      if (page < 1) page = 1;
+      if (page > totalPages) page = totalPages;
+      currentPage = page;
+      renderUI();
+    }
+
+    function renderPager(elementId) {
+      const container = document.getElementById(elementId);
+      const totalPages = getTotalPages();
+      container.innerHTML = '';
+
+      if (totalPages <= 1) return;
+
+      const prevBtn = document.createElement('button');
+      prevBtn.className = 'page-btn';
+      prevBtn.innerHTML = '◀ 前のカード';
+      prevBtn.disabled = (currentPage === 1);
+      prevBtn.onclick = () => setPage(currentPage - 1);
+      container.appendChild(prevBtn);
+
+      for (let p = 1; p <= totalPages; p++) {
+        const pBtn = document.createElement('button');
+        pBtn.className = 'page-btn' + (p === currentPage ? ' active' : '');
+        pBtn.textContent = `${p}枚目`;
+        pBtn.onclick = () => setPage(p);
+        container.appendChild(pBtn);
+      }
+
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'page-btn';
+      nextBtn.innerHTML = '次のカード ▶';
+      nextBtn.disabled = (currentPage === totalPages);
+      nextBtn.onclick = () => setPage(currentPage + 1);
+      container.appendChild(nextBtn);
+    }
+
+    function renderUI() {
+      const totalPages = getTotalPages();
+      if (currentPage > totalPages) currentPage = totalPages;
+
+      document.getElementById('deptInput').value = userData.profile.department || '';
+      document.getElementById('numInput').value = userData.profile.studentNumber || '';
+      document.getElementById('nameInput').value = userData.profile.name || '';
+      document.getElementById('volumeTag').textContent = `（ 第 ${currentPage} 枚目 ／ 全 ${totalPages} 枚 ）`;
+
+      renderPager('pagerTop');
+      renderPager('pagerBottom');
+      updateStampedCount();
+
+      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+      const pageVideos = videoCatalog.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+      const tbody = document.getElementById('recordTbody');
+      tbody.innerHTML = '';
+
+      pageVideos.forEach((video, pageOffset) => {
+        const actualIndex = startIndex + pageOffset;
+        const userRec = userData.records[video.id] || {
+          isStamped: false,
+          watchedDate: '',
+          stampAngle: 0,
+          note: ''
+        };
+
+        const tr = document.createElement('tr');
+
+        // No.
+        const tdNo = document.createElement('td');
+        tdNo.className = 'col-no';
+        tdNo.textContent = actualIndex + 1;
+        tr.appendChild(tdNo);
+
+        // 視聴日付
+        const tdDate = document.createElement('td');
+        const inputDate = document.createElement('input');
+        inputDate.type = 'text';
+        inputDate.className = 'cell-input date-input';
+        inputDate.placeholder = '年-月-日';
+        inputDate.value = userRec.watchedDate || '';
+        inputDate.onchange = (e) => {
+          ensureRecord(video.id);
+          userData.records[video.id].watchedDate = e.target.value;
+          saveUserData();
+        };
+        tdDate.appendChild(inputDate);
+        tr.appendChild(tdDate);
+
+        // 動画標題
+        const tdTitle = document.createElement('td');
+        tdTitle.className = 'col-title';
+        const titleWrapper = document.createElement('div');
+        titleWrapper.className = 'title-wrapper';
+
+        const spanTitle = document.createElement('span');
+        spanTitle.className = 'title-text';
+        spanTitle.textContent = video.title;
+        titleWrapper.appendChild(spanTitle);
+
+        if (video.url) {
+          const link = document.createElement('a');
+          link.href = video.url;
+          link.target = '_blank';
+          link.className = 'link-btn';
+          link.title = 'TikTok動画を開く';
+          link.textContent = '↗';
+          titleWrapper.appendChild(link);
+        }
+        tdTitle.appendChild(titleWrapper);
+        tr.appendChild(tdTitle);
+
+        // 検印
+        const tdStamp = document.createElement('td');
+        tdStamp.className = 'col-stamp';
+        const stampBox = document.createElement('div');
+        stampBox.className = 'stamp-box';
+        stampBox.title = userRec.isStamped ? 'クリックで検印を解除' : 'クリックで検印を押す（日付も自動入力）';
+
+        if (userRec.isStamped) {
+          stampBox.innerHTML = `
+            <div class="seal-stamp" style="transform: rotate(${userRec.stampAngle || 0}deg);">
+              <span class="seal-top">夏空学園</span>
+              <span class="seal-center">検印</span>
+              <span class="seal-bottom">図書室</span>
+            </div>
+          `;
+        } else {
+          stampBox.innerHTML = `<span class="stamp-hint">押印</span>`;
+        }
+
+        stampBox.onclick = () => toggleStamp(video.id);
+        tdStamp.appendChild(stampBox);
+        tr.appendChild(tdStamp);
+
+        // 所感・備考
+        const tdNote = document.createElement('td');
+        tdNote.className = 'col-note';
+        const inputNote = document.createElement('input');
+        inputNote.type = 'text';
+        inputNote.className = 'cell-input';
+        inputNote.placeholder = '感想を記入…';
+        inputNote.value = userRec.note || '';
+        inputNote.onchange = (e) => {
+          ensureRecord(video.id);
+          userData.records[video.id].note = e.target.value;
+          saveUserData();
+        };
+        tdNote.appendChild(inputNote);
+        tr.appendChild(tdNote);
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function ensureRecord(videoId) {
+      if (!userData.records[videoId]) {
+        userData.records[videoId] = { isStamped: false, watchedDate: '', stampAngle: 0, note: '' };
+      }
+    }
+
+    function toggleStamp(videoId) {
+      ensureRecord(videoId);
+      const rec = userData.records[videoId];
+
+      if (!rec.isStamped) {
+        rec.isStamped = true;
+        if (!rec.watchedDate) {
+          rec.watchedDate = getTodayString();
+        }
+        rec.stampAngle = Math.floor(Math.random() * 11) - 5;
+        playStampSound();
+      } else {
+        rec.isStamped = false;
+        rec.watchedDate = '';
+      }
+
+      saveUserData();
+      renderUI();
+    }
+
+    function clearMyData() {
+      if (!confirm('検印や備考などの記録をすべて初期化しますか？')) return;
+      userData.records = {};
+      saveUserData();
+      renderUI();
+    }
+
+    // 画像保存（inputの文字欠け＆タイトルの黒帯バグを完全防止）
+    function saveAsImage() {
+      const target = document.getElementById('captureTarget');
+
+      html2canvas(target, {
+        scale: 2,
+        backgroundColor: null,
+        useCORS: true,
+        onclone: (clonedDoc) => {
+          // 1. タイトルのグラデーション文字（黒帯化バグ）を解消
+          const clonedTitle = clonedDoc.querySelector('.card-title');
+          if (clonedTitle) {
+            clonedTitle.style.background = 'none';
+            clonedTitle.style.webkitBackgroundClip = 'unset';
+            clonedTitle.style.webkitTextFillColor = 'unset';
+            clonedTitle.style.color = '#382b4a'; // 上品な濃紺紫
+          }
+
+          // 2. すべての input 要素をテキスト(span)に差し替えて文字切れを完全防止
+          const inputs = clonedDoc.querySelectorAll('input');
+          inputs.forEach(input => {
+            const span = clonedDoc.createElement('span');
+            const hasVal = Boolean(input.value && input.value.trim());
+            const text = hasVal ? input.value : (input.placeholder || '');
+            span.textContent = text;
+
+            span.className = input.className;
+            span.style.display = 'inline-block';
+            span.style.width = '100%';
+            span.style.lineHeight = '1.4';
+            span.style.verticalAlign = 'middle';
+            span.style.border = 'none';
+            span.style.background = 'transparent';
+
+            if (!hasVal) {
+              span.style.color = '#a094b8'; // プレースホルダー色
+              span.style.opacity = '0.75';
+            } else {
+              span.style.color = 'var(--ink-dark)';
+            }
+
+            input.parentNode.replaceChild(span, input);
+          });
+        }
+      }).then(canvas => {
+        const link = document.createElement('a');
+        const namePart = userData.profile.name ? `_${userData.profile.name}` : '';
+        link.download = `夏空学園_図書カード_第${currentPage}枚${namePart}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+
+  <!-- 共通フッター -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="footer-label">📢 夏空あさひ 公式SNS</p>
+      <div class="sns-links">
+        <a href="https://www.tiktok.com/@asahi.natsuzora" class="sns-btn tiktok" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 3 15.68 6.34 6.34 0 0 0 9.33 22a6.33 6.33 0 0 0 6.34-6.32V8.2a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.85-.37v.74z"/></svg>
+          <span>TikTok</span>
+        </a>
+        <a href="https://x.com/asahinatsu_v" class="sns-btn x-twitter" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          <span>X (@asahinatsu_v)</span>
+        </a>
+      </div>
+      <p class="copyright">&copy; 夏空学園 非公式ファンポータル</p>
+    </div>
+  </footer>
+</body>
+</html>
