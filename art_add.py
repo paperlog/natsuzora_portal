@@ -134,7 +134,7 @@ def main():
 
     # R2上のキー（デスクトップなど別の場所にある画像でも、R2上は img/art_room/ファイル名 に統一）
     filename = local_file.name
-    r2_key = f"img/art_room/{filename}"
+    r2_key = filename
 
     # R2へアップロード実行
     try:
