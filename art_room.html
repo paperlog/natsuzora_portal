@@ -31,24 +31,11 @@
   </header>
 
   <main class="page-container">
-    <section class="art-notice-card">
-      <h2>🎨 美術室の展示について</h2>
-      <p class="notice-desc">
-        夏空あさひちゃんのファンアート（#夏空学園美術部 等）を展示・保管している非公式ギャラリーです。<br>
-        イラストをクリックするとXの元ポストへジャンプし、お気に入りの作品を端末に保存できます。
-      </p>
+    <!-- 目立たない控えめな注意書き -->
+    <div class="art-notice-compact">
+      <p>※ 管理人による手動巡回のため反映にお時間をいただく場合があります。掲載の取り下げ・リクエスト等は開発者SNSへお気軽にどうぞ。</p>
+    </div>
 
-      <div class="notice-badge-box">
-        <div class="notice-badge-title">
-          <span>⚠️</span> 掲載・更新に関するご案内（人力更新）
-        </div>
-        <ul class="notice-list">
-          <li>当ギャラリーの作品展示は、<strong>管理人による手作業（手動・人力）で巡回・更新</strong>しています。そのため、投稿から反映までにお時間をいただく場合があります。</li>
-          <li>掲載されている作品の著作権・権利は各イラストレーター様に帰属します。</li>
-          <li>掲載の取り下げ・修正希望、または「掲載してほしい」というリクエストがございましたら、ポータル記載のSNS等からお気軽にご連絡ください。</li>
-        </ul>
-      </div>
-    </section>
     <!-- ステータスバー -->
     <div class="gallery-topbar">
       <div class="status-box">
@@ -142,8 +129,6 @@
 
       sorted.forEach(art => {
         const displayTitle = art.title || `${art.author || '夏空あさひ'}のアート`;
-        const saveFileName = art.title || `${art.id || 'natsuzora_art'}`;
-
         const card = document.createElement('article');
         card.className = 'art-card';
 
@@ -175,50 +160,12 @@
 
             <div class="art-footer">
               <span class="art-date">${art.date || ''}</span>
-              <button type="button" class="btn-card-save" title="端末に画像をダウンロード">💾 保存</button>
             </div>
           </div>
         `;
 
-        card.querySelector('.btn-card-save').addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const ext = art.image.split('.').pop().split('?')[0] || 'webp';
-          downloadImage(art.image, `${saveFileName}.${ext}`);
-        });
-
         grid.appendChild(card);
       });
-    }
-
-    async function downloadImage(imageSrc, fileName) {
-      try {
-        const response = await fetch(imageSrc);
-        const blob = await response.blob();
-        const blobUrl = URL.createObjectURL(blob);
-
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        const isInApp = /Line|FBAN|FBAV|Twitter/i.test(navigator.userAgent);
-
-        if (isIOS || isInApp) {
-          const newTab = window.open(blobUrl, '_blank');
-          if (!newTab) window.location.href = blobUrl;
-        } else {
-          const link = document.createElement('a');
-          link.href = blobUrl;
-          link.download = fileName;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
-        }
-      } catch (err) {
-        const link = document.createElement('a');
-        link.href = imageSrc;
-        link.target = '_blank';
-        link.download = fileName;
-        link.click();
-      }
     }
 
     function escapeHtml(str) {
