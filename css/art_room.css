@@ -1,0 +1,275 @@
+@charset "UTF-8";
+
+body {
+  background-color: var(--sky-blue);
+  color: var(--text-dark);
+  font-family: "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.page-container {
+  max-width: 1080px;
+  width: 100%;
+  margin: 1.5rem auto 4rem;
+  padding: 0 1rem;
+  flex-grow: 1;
+}
+
+/* トップバー（ステータス＆並び替え） */
+.gallery-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 0.8rem 1.4rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.status-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.status-box strong {
+  color: var(--main-purple);
+  font-size: 1.1rem;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 6px rgba(74, 222, 128, 0.6);
+  display: inline-block;
+}
+
+.sort-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.sort-box select {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid #cfc5e3;
+  background: #fdfcff;
+  color: #444;
+  font-size: 0.85rem;
+  outline: none;
+  cursor: pointer;
+}
+
+/* ギャラリーグリッド */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.loading-box, .empty-notice {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 1rem;
+  background: #ffffff;
+  border-radius: 12px;
+  color: #777;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* 個別アートカード */
+.art-card {
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(157, 142, 193, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.art-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(157, 142, 193, 0.22);
+}
+
+/* 画像リンク <a> タグ */
+.art-img-link {
+  display: block;
+  text-decoration: none;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background-color: #f1edf7;
+  position: relative;
+}
+
+.art-thumb-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.art-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.art-img-link:hover .art-thumb {
+  transform: scale(1.05);
+}
+
+/* ホバー時のXオーバーレイ */
+.thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 20, 25, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.art-img-link:hover .thumb-overlay {
+  opacity: 1;
+}
+
+.overlay-badge {
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: bold;
+  background: rgba(0, 0, 0, 0.75);
+  padding: 6px 14px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* メタ情報 */
+.art-meta {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.art-title {
+  margin: 0 0 0.4rem;
+  font-size: 0.98rem;
+  font-weight: bold;
+  color: var(--text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.art-author-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.art-author {
+  font-size: 0.8rem;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.art-author strong {
+  color: var(--main-purple);
+}
+
+.link-x-icon {
+  color: #4a8cd4;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.85rem;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(74, 140, 212, 0.1);
+  transition: background 0.2s;
+}
+
+.link-x-icon:hover {
+  background: rgba(74, 140, 212, 0.2);
+}
+
+.art-comment {
+  margin: 0 0 0.8rem;
+  font-size: 0.8rem;
+  color: #555;
+  line-height: 1.4;
+  background: #f9f8fc;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border-left: 2.5px solid var(--main-purple);
+}
+
+.art-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px dashed #e8e2f2;
+  padding-top: 0.6rem;
+}
+
+.art-date {
+  font-size: 0.75rem;
+  color: #999;
+}
+
+.btn-card-save {
+  background: #f4effa;
+  color: #645280;
+  border: 1px solid #d5c8eb;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-card-save:hover {
+  background: var(--main-purple);
+  color: #ffffff;
+  border-color: var(--main-purple);
+}
+
+@media (max-width: 500px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .art-meta {
+    padding: 0.6rem;
+  }
+  .art-title {
+    font-size: 0.85rem;
+  }
+}
