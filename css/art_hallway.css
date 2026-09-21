@@ -1,0 +1,364 @@
+@charset "UTF-8";
+
+/* 廊下展示の背景：落ち着いた壁面と静かな回廊の雰囲気 */
+.hallway-body {
+  background-color: #ede9e3;
+  background-image: 
+    radial-gradient(#ded8cf 1px, transparent 1px),
+    linear-gradient(to bottom, #f2efe9, #e5e0d8);
+  background-size: 24px 24px, 100% 100%;
+  color: var(--text-dark);
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* メインコンテナ：画面いっぱいに広がりつつ見やすい最大幅 */
+.hallway-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 1.5rem auto 4rem;
+  padding: 0 1.2rem;
+  box-sizing: border-box;
+  flex-grow: 1;
+}
+
+/* 上部バー（戻るリンク・件数） */
+.hallway-nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  padding: 0.8rem 1.4rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2.5rem;
+  border: 1px solid rgba(157, 142, 193, 0.25);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.back-to-artroom-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #5c4e75;
+  background: #f4effa;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid #d5c8eb;
+  transition: all 0.2s ease;
+}
+
+.back-to-artroom-btn:hover {
+  background: var(--main-purple);
+  color: #fff;
+  transform: translateX(-3px);
+}
+
+.hallway-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.hallway-info strong {
+  color: var(--main-purple);
+  font-size: 1.1rem;
+}
+
+.hallway-indicator {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #e6a817;
+  box-shadow: 0 0 8px rgba(230, 168, 23, 0.6);
+}
+
+/* =========================================
+   展示壁面（1列・縦並び）
+========================================= */
+.hallway-wall {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4.5rem; /* 各作品の間隔 */
+  width: 100%;
+}
+
+.loading-box, .empty-notice {
+  text-align: center;
+  padding: 4rem 1.5rem;
+  background: #ffffff;
+  border-radius: 12px;
+  color: #777;
+  width: 100%;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* 各展示ユニット */
+.frame-exhibit {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* --- ピクチャーワイヤー & フック --- */
+.picture-hanger {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  margin-bottom: -2px;
+  z-index: 1;
+}
+
+.hanger-hook {
+  width: 16px;
+  height: 12px;
+  background: linear-gradient(135deg, #d4af37, #aa820a, #785a00);
+  border-radius: 3px 3px 6px 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.hanger-wire {
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, #999, #bbb);
+  box-shadow: 1px 0 2px rgba(0,0,0,0.15);
+}
+
+/* =========================================
+   額縁（ピクチャーフレーム）
+========================================= */
+.picture-frame {
+  width: 100%;
+  box-sizing: border-box;
+  background: #2b221a; /* 額縁の外枠ベース */
+  padding: 16px;       /* 額縁枠の太さ */
+  border-radius: 8px;
+  
+  /* 多重シャドウとグラデーションボーダーで立体的な木彫・金装飾フレームを表現 */
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.35),
+    0 4px 10px rgba(0, 0, 0, 0.2),
+    inset 0 0 0 2px #503d2e,
+    inset 0 0 10px rgba(0, 0, 0, 0.7);
+  border: 4px solid #b58d47; /* 金のモールディング縁 */
+  position: relative;
+}
+
+/* 白いマット台紙（Passe-partout） */
+.frame-matte {
+  background: #f8f6f0;
+  padding: 24px;
+  box-shadow:
+    inset 0 0 12px rgba(0, 0, 0, 0.25),
+    inset 0 0 0 1px #d6d0c2;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 画像ラッパー：横幅いっぱいに統一 */
+.art-visual-wrapper {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #111;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.art-link {
+  display: block;
+  width: 100%;
+  text-decoration: none;
+  position: relative;
+}
+
+/* 画像：横幅100%で均等に表示 */
+.frame-art-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-height: 85vh; /* 縦長画像が画面を突き抜けすぎないよう調整 */
+  object-fit: contain;
+  background-color: #1a1a1a;
+  transition: transform 0.3s ease;
+}
+
+.art-link:hover .frame-art-img {
+  transform: scale(1.015);
+}
+
+/* ポストを見るバッジ */
+.hover-view-badge {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: bold;
+  background: rgba(15, 20, 25, 0.82);
+  padding: 6px 14px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  backdrop-filter: blur(4px);
+  opacity: 0.85;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.art-link:hover .hover-view-badge {
+  opacity: 1;
+  background: #000;
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   美術館風 銘板（ネームプレート）
+========================================= */
+.museum-plaque {
+  margin-top: 1.2rem;
+  background: linear-gradient(135deg, #dfc07b 0%, #f7e6b5 50%, #c9a356 100%);
+  border: 1px solid #9c782f;
+  padding: 2px;
+  border-radius: 4px;
+  box-shadow: 
+    0 4px 10px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  width: min(480px, 92%);
+}
+
+.plaque-inner {
+  border: 1px dashed rgba(120, 89, 28, 0.5);
+  padding: 10px 18px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 2px;
+}
+
+.plaque-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: #644a15;
+  font-family: serif;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+  border-bottom: 1px solid rgba(120, 89, 28, 0.2);
+  padding-bottom: 3px;
+}
+
+.plaque-title {
+  margin: 0.3rem 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #2e2107;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  letter-spacing: 0.04em;
+}
+
+.plaque-author {
+  font-size: 0.82rem;
+  color: #4a3812;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.plaque-author strong {
+  color: #1a1100;
+}
+
+.plaque-link {
+  color: #2b568f;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.78rem;
+  padding: 1px 6px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 4px;
+  border: 1px solid rgba(43, 86, 143, 0.3);
+}
+
+.plaque-link:hover {
+  background: #2b568f;
+  color: #fff;
+}
+
+.plaque-comment {
+  margin: 0.5rem auto 0;
+  font-size: 0.8rem;
+  color: #4e3c1a;
+  line-height: 1.4;
+  font-style: italic;
+  max-width: 90%;
+}
+
+/* 廊下の終点 */
+.hallway-end {
+  text-align: center;
+  margin: 5rem 0 2rem;
+  padding-top: 2rem;
+  border-top: 1px dashed rgba(157, 142, 193, 0.4);
+  color: #777;
+  font-size: 0.9rem;
+}
+
+.btn-return-door {
+  display: inline-block;
+  margin-top: 1rem;
+  background: #ffffff;
+  color: var(--text-dark);
+  text-decoration: none;
+  padding: 0.7rem 1.8rem;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 0.95rem;
+  border: 1.5px solid var(--main-purple);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: all 0.2s ease;
+}
+
+.btn-return-door:hover {
+  background: var(--main-purple);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(157, 142, 193, 0.3);
+}
+
+/* スマホ対応 */
+@media (max-width: 600px) {
+  .hallway-container {
+    padding: 0 0.8rem;
+  }
+  .picture-frame {
+    padding: 10px;
+    border-width: 3px;
+  }
+  .frame-matte {
+    padding: 12px;
+  }
+  .hallway-wall {
+    gap: 3.5rem;
+  }
+  .plaque-title {
+    font-size: 0.95rem;
+  }
+}
