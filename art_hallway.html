@@ -73,98 +73,138 @@
   </footer>
 
   <script>
-    async function initHallway() {
-      const wall = document.getElementById('hallwayWall');
-      const countEl = document.getElementById('galleryCount');
+let allArts = [];
+let currentIndex = 0;
+const PAGE_SIZE = 10; // 1回あたりに追加する枚数
+let observer = null;
 
-      try {
-        const res = await fetch('./art.json?t=' + Date.now());
-        if (!res.ok) throw new Error('art.json の取得に失敗しました');
-        const artList = await res.json();
+async function initHallway() {
+  const wall = document.getElementById('hallwayWall');
+  const countEl = document.getElementById('galleryCount');
 
-        if (!artList || artList.length === 0) {
-          countEl.textContent = '展示数: 0点';
-          wall.innerHTML = '<div class="empty-notice">現在展示中の作品はありません。</div>';
-          return;
-        }
+  try {
+    const res = await fetch('./art.json?t=' + Date.now());
+    if (!res.ok) throw new Error('art.json の取得に失敗しました');
+    allArts = await res.json();
 
-        countEl.innerHTML = `全 <strong>${artList.length}</strong> 点の作品が展示されています`;
-        wall.innerHTML = '';
-
-        // art.jsonの上から順番にレンダリング
-        artList.forEach((art, index) => {
-          const item = document.createElement('article');
-          item.className = 'frame-exhibit';
-
-          const targetUrl = art.url ? escapeHtml(art.url) : '';
-          const displayTitle = art.title || `${art.author || '夏空あさひ'}のアート`;
-
-          item.innerHTML = `
-            <!-- 壁から吊り下げるワイヤー演出 -->
-            <div class="picture-hanger">
-              <div class="hanger-hook"></div>
-              <div class="hanger-wire"></div>
-            </div>
-
-            <!-- 額縁本体 -->
-            <div class="picture-frame">
-              <div class="frame-matte">
-                <div class="art-visual-wrapper">
-                  ${targetUrl ? `<a href="${targetUrl}" target="_blank" rel="noopener noreferrer" class="art-link" title="X(Twitter)で元ポストを見る">` : ''}
-                    <img src="${art.image}" alt="${escapeHtml(displayTitle)}" loading="lazy" class="frame-art-img">
-                    ${targetUrl ? `
-                      <span class="hover-view-badge">
-                        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                        ポストを開く ↗
-                      </span>
-                    ` : ''}
-                  ${targetUrl ? `</a>` : ''}
-                </div>
-              </div>
-            </div>
-
-            <!-- 美術館風ネームプレート（銘板） -->
-            <div class="museum-plaque">
-              <div class="plaque-inner">
-                <div class="plaque-header">
-                  <span class="plaque-no">No.${String(index + 1).padStart(2, '0')}</span>
-                  <span class="plaque-date">${art.date || ''}</span>
-                </div>
-                <h2 class="plaque-title">${escapeHtml(displayTitle)}</h2>
-                <div class="plaque-author">
-                  <span>作者: <strong>${escapeHtml(art.author || '匿名生徒')}</strong></span>
-                  ${targetUrl ? `<a href="${targetUrl}" target="_blank" rel="noopener noreferrer" class="plaque-link">X元ポスト ↗</a>` : ''}
-                </div>
-                ${art.comment ? `<p class="plaque-comment">${escapeHtml(art.comment)}</p>` : ''}
-              </div>
-            </div>
-          `;
-
-          wall.appendChild(item);
-        });
-
-      } catch (err) {
-        console.error(err);
-        countEl.textContent = '読み込み失敗';
-        wall.innerHTML = `
-          <div class="empty-notice">
-            <p>作品データ（art.json）を取得できませんでした。</p>
-            <p style="font-size: 0.85rem; color: #888;">ルート直下に art.json が存在するか確認してください。</p>
-          </div>`;
-      }
+    if (!allArts || allArts.length === 0) {
+      countEl.textContent = '展示数: 0点';
+      wall.innerHTML = '<div class="empty-notice">現在展示中の作品はありません。</div>';
+      return;
     }
 
-    function escapeHtml(str) {
-      if (!str) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
+    countEl.innerHTML = `全 <strong>${allArts.length}</strong> 点の作品が展示されています`;
+    wall.innerHTML = '';
 
-    window.addEventListener('DOMContentLoaded', initHallway);
+    // 最下部検知用の見えないマーカー要素を作成
+    createSentinel();
+
+    // 最初の10枚を描画
+    renderNextBatch();
+
+  } catch (err) {
+    console.error(err);
+    countEl.textContent = '読み込み失敗';
+    wall.innerHTML = `
+      <div class="empty-notice">
+        <p>作品データ（art.json）を取得できませんでした。</p>
+        <p style="font-size: 0.85rem; color: #888;">ルート直下に art.json が存在するか確認してください。</p>
+      </div>`;
+  }
+}
+
+// 最下部を監視するマーカーを作成
+function createSentinel() {
+  const sentinel = document.createElement('div');
+  sentinel.id = 'scrollSentinel';
+  sentinel.style.height = '40px'; // 判定用のわずかな高さ
+
+  const wall = document.getElementById('hallwayWall');
+  wall.parentNode.insertBefore(sentinel, wall.nextSibling);
+
+  // 画面内に入ったら次の10件を自動で読み込む
+  observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      renderNextBatch();
+    }
+  }, { rootMargin: '200px' }); // 画面下端の200px手前に来たら先読み開始
+
+  observer.observe(sentinel);
+}
+
+// 次の10枚を追加描画する関数
+function renderNextBatch() {
+  if (currentIndex >= allArts.length) {
+    // 全て読み込み終わったら監視を解除してマーカーを削除
+    if (observer) observer.disconnect();
+    const sentinel = document.getElementById('scrollSentinel');
+    if (sentinel) sentinel.remove();
+    return;
+  }
+
+  const wall = document.getElementById('hallwayWall');
+  const nextArts = allArts.slice(currentIndex, currentIndex + PAGE_SIZE);
+
+  nextArts.forEach((art, idx) => {
+    const realIndex = currentIndex + idx;
+    const item = document.createElement('article');
+    item.className = 'frame-exhibit';
+
+    const targetUrl = art.url ? escapeHtml(art.url) : '';
+    const displayTitle = art.title || `${art.author || '夏空あさひ'}のアート`;
+
+    item.innerHTML = `
+      <div class="picture-hanger">
+        <div class="hanger-hook"></div>
+        <div class="hanger-wire"></div>
+      </div>
+      <div class="picture-frame">
+        <div class="frame-matte">
+          <div class="art-visual-wrapper">
+            ${targetUrl ? `<a href="${targetUrl}" target="_blank" rel="noopener noreferrer" class="art-link" title="X(Twitter)で元ポストを見る">` : ''}
+              <img src="${art.image}" alt="${escapeHtml(displayTitle)}" loading="lazy" class="frame-art-img">
+              ${targetUrl ? `
+                <span class="hover-view-badge">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                  ポストを開く ↗
+                </span>
+              ` : ''}
+            ${targetUrl ? `</a>` : ''}
+          </div>
+        </div>
+      </div>
+      <div class="museum-plaque">
+        <div class="plaque-inner">
+          <div class="plaque-header">
+            <span class="plaque-no">No.${String(realIndex + 1).padStart(2, '0')}</span>
+            <span class="plaque-date">${art.date || ''}</span>
+          </div>
+          <h2 class="plaque-title">${escapeHtml(displayTitle)}</h2>
+          <div class="plaque-author">
+            <span>作者: <strong>${escapeHtml(art.author || '匿名生徒')}</strong></span>
+            ${targetUrl ? `<a href="${targetUrl}" target="_blank" rel="noopener noreferrer" class="plaque-link">X元ポスト ↗</a>` : ''}
+          </div>
+          ${art.comment ? `<p class="plaque-comment">${escapeHtml(art.comment)}</p>` : ''}
+        </div>
+      </div>
+    `;
+    wall.appendChild(item);
+  });
+
+  currentIndex += nextArts.length;
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+window.addEventListener('DOMContentLoaded', initHallway);
   </script>
 </body>
 </html>

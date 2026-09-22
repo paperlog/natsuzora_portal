@@ -113,108 +113,173 @@
   </footer>
 
   <script>
-    let artList = [];
-    let sortOrder = 'newest';
+let artList = [];
+let sortOrder = 'newest';
+let currentPage = 1;
+const ITEMS_PER_PAGE = 12; // 1ページあたりの表示件数
 
-    async function initGallery() {
-      const grid = document.getElementById('galleryGrid');
-      const countEl = document.getElementById('galleryCount');
+async function initGallery() {
+  const grid = document.getElementById('galleryGrid');
+  const countEl = document.getElementById('galleryCount');
 
-      try {
-        const res = await fetch('./art.json?t=' + Date.now());
-        if (!res.ok) throw new Error('art.json の取得に失敗しました');
-        artList = await res.json();
-      } catch (err) {
-        console.error(err);
-        countEl.textContent = '読み込み失敗';
-        grid.innerHTML = `
-          <div class="empty-notice">
-            <p>作品データ（art.json）を取得できませんでした。</p>
-            <p style="font-size: 0.85rem; color: #888;">ルート直下に art.json が存在するか確認してください。</p>
-          </div>`;
-        return;
-      }
+  try {
+    const res = await fetch('./art.json?t=' + Date.now());
+    if (!res.ok) throw new Error('art.json の取得に失敗しました');
+    artList = await res.json();
+  } catch (err) {
+    console.error(err);
+    countEl.textContent = '読み込み失敗';
+    grid.innerHTML = `
+      <div class="empty-notice">
+        <p>作品データ（art.json）を取得できませんでした。</p>
+        <p style="font-size: 0.85rem; color: #888;">ルート直下に art.json が存在するか確認してください。</p>
+      </div>`;
+    return;
+  }
 
-      renderGallery();
-    }
+  renderGallery();
+}
 
-    function changeSort(order) {
-      sortOrder = order;
-      renderGallery();
-    }
+function changeSort(order) {
+  sortOrder = order;
+  currentPage = 1; // ソート変更時は1ページ目に戻す
+  renderGallery();
+}
 
-    function renderGallery() {
-      const grid = document.getElementById('galleryGrid');
-      const countEl = document.getElementById('galleryCount');
+function renderGallery() {
+  const grid = document.getElementById('galleryGrid');
+  const countEl = document.getElementById('galleryCount');
 
-      if (!artList || artList.length === 0) {
-        countEl.textContent = '展示数: 0点';
-        grid.innerHTML = '<div class="empty-notice">現在展示中の作品はありません。</div>';
-        return;
-      }
+  if (!artList || artList.length === 0) {
+    countEl.textContent = '展示数: 0点';
+    grid.innerHTML = '<div class="empty-notice">現在展示中の作品はありません。</div>';
+    renderPagination(0);
+    return;
+  }
 
-      countEl.innerHTML = `全 <strong>${artList.length}</strong> 点 展示中`;
+  countEl.innerHTML = `全 <strong>${artList.length}</strong> 点 展示中`;
 
-      const sorted = [...artList].sort((a, b) => {
-        const dateA = new Date(a.date || 0).getTime();
-        const dateB = new Date(b.date || 0).getTime();
-        return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
-      });
+  // 並び替え
+  const sorted = [...artList].sort((a, b) => {
+    const dateA = new Date(a.date || 0).getTime();
+    const dateB = new Date(b.date || 0).getTime();
+    return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+  });
 
-      grid.innerHTML = '';
+  // 現在のページの分だけスライス
+  const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
+  const start = (currentPage - 1) * ITEMS_PER_PAGE;
+  const pageItems = sorted.slice(start, start + ITEMS_PER_PAGE);
 
-      sorted.forEach(art => {
-        const displayTitle = art.title || `${art.author || '夏空あさひ'}のアート`;
-        const card = document.createElement('article');
-        card.className = 'art-card';
+  grid.innerHTML = '';
 
-        const targetUrl = art.url ? escapeHtml(art.url) : '#';
-        const hasUrl = Boolean(art.url);
+  pageItems.forEach(art => {
+    const displayTitle = art.title || `${art.author || '夏空あさひ'}のアート`;
+    const card = document.createElement('article');
+    card.className = 'art-card';
 
-        card.innerHTML = `
-          <a href="${targetUrl}" ${hasUrl ? 'target="_blank" rel="noopener noreferrer"' : ''} class="art-img-link" title="${hasUrl ? 'Xの元ポストを開く' : ''}">
-            <div class="art-thumb-container">
-              <img src="${art.image}" alt="${escapeHtml(displayTitle)}" loading="lazy" class="art-thumb">
-              <div class="thumb-overlay">
-                <span class="overlay-badge">
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                  ポストを開く ↗
-                </span>
-              </div>
-            </div>
-          </a>
+    const targetUrl = art.url ? escapeHtml(art.url) : '#';
+    const hasUrl = Boolean(art.url);
 
-          <div class="art-meta">
-            <h3 class="art-title">${escapeHtml(displayTitle)}</h3>
-            
-            <div class="art-author-row">
-              <span class="art-author">作者: <strong>${escapeHtml(art.author || '匿名生徒')}</strong></span>
-              ${hasUrl ? `<a href="${targetUrl}" target="_blank" rel="noopener noreferrer" class="link-x-icon" title="Xで見る">↗</a>` : ''}
-            </div>
-
-            ${art.comment ? `<p class="art-comment">${escapeHtml(art.comment)}</p>` : ''}
-
-            <div class="art-footer">
-              <span class="art-date">${art.date || ''}</span>
-            </div>
+    card.innerHTML = `
+      <a href="${targetUrl}" ${hasUrl ? 'target="_blank" rel="noopener noreferrer"' : ''} class="art-img-link" title="${hasUrl ? 'Xの元ポストを開く' : ''}">
+        <div class="art-thumb-container">
+          <img src="${art.image}" alt="${escapeHtml(displayTitle)}" loading="lazy" class="art-thumb">
+          <div class="thumb-overlay">
+            <span class="overlay-badge">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              ポストを開く ↗
+            </span>
           </div>
-        `;
+        </div>
+      </a>
+      <div class="art-meta">
+        <h3 class="art-title">${escapeHtml(displayTitle)}</h3>
+        <div class="art-author-row">
+          <span class="art-author">作者: <strong>${escapeHtml(art.author || '匿名生徒')}</strong></span>
+          ${hasUrl ? `<a href="${targetUrl}" target="_blank" rel="noopener noreferrer" class="link-x-icon" title="Xで見る">↗</a>` : ''}
+        </div>
+        ${art.comment ? `<p class="art-comment">${escapeHtml(art.comment)}</p>` : ''}
+        <div class="art-footer">
+          <span class="art-date">${art.date || ''}</span>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
 
-        grid.appendChild(card);
-      });
-    }
+  renderPagination(totalPages);
+}
 
-    function escapeHtml(str) {
-      if (!str) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
+// ページ送りUIの描画
+function renderPagination(totalPages) {
+  let nav = document.getElementById('galleryPagination');
+  if (!nav) {
+    nav = document.createElement('div');
+    nav.id = 'galleryPagination';
+    nav.style.cssText = `
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin: 2rem 0;
+    `;
+    const grid = document.getElementById('galleryGrid');
+    grid.parentNode.insertBefore(nav, grid.nextSibling);
+  }
 
-    window.addEventListener('DOMContentLoaded', initGallery);
+  if (totalPages <= 1) {
+    nav.innerHTML = '';
+    return;
+  }
+
+  let html = '';
+  // 「前へ」ボタン
+  if (currentPage > 1) {
+    html += `<button onclick="goToPage(${currentPage - 1})" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer;">← 前へ</button>`;
+  }
+
+  // ページ番号
+  for (let i = 1; i <= totalPages; i++) {
+    const isCurrent = i === currentPage;
+    html += `
+      <button onclick="goToPage(${i})" style="
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: 1px solid ${isCurrent ? 'var(--main-purple, #6c5ce7)' : '#ccc'};
+        background: ${isCurrent ? 'var(--main-purple, #6c5ce7)' : '#fff'};
+        color: ${isCurrent ? '#fff' : '#333'};
+        font-weight: ${isCurrent ? 'bold' : 'normal'};
+        cursor: pointer;
+      ">${i}</button>
+    `;
+  }
+
+  // 「次へ」ボタン
+  if (currentPage < totalPages) {
+    html += `<button onclick="goToPage(${currentPage + 1})" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer;">次へ →</button>`;
+  }
+
+  nav.innerHTML = html;
+}
+
+function goToPage(page) {
+  currentPage = page;
+  renderGallery();
+  window.scrollTo({ top: 0, behavior: 'smooth' }); // ページ変更時に上部へスクロール
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+window.addEventListener('DOMContentLoaded', initGallery);
   </script>
 </body>
 </html>
