@@ -192,7 +192,6 @@
               <div class="timetable-empty">
                 <span class="empty-icon">🎐</span>
                 <p class="empty-title">今日はお休み</p>
-                <p class="empty-sub">本日は自習日です。アーカイブを見て復習しよう！</p>
               </div>
             `;
             return;
@@ -203,16 +202,27 @@
             const row = document.createElement("div");
             row.className = "timetable-row";
 
-            // typeに応じたバッジとデフォルト文言の設定
+            // typeに応じたバッジと文言・リンクの設定
             let badgeClass = "badge-info";
-            let defaultTitle = "予定あり";
+            let contentHtml = `<span class="subject-title">予定あり</span>`;
 
             if (item.type === "配信") {
               badgeClass = "badge-live";
-              defaultTitle = "TikTok LIVE 配信予定";
+              // 配信時はLIVE直通リンク（またはプロフィールリンク）を付ける
+              contentHtml = `
+                <a href="https://www.tiktok.com/@asahi.natsuzora/live" target="_blank" rel="noopener noreferrer" class="timetable-link">
+                  <span class="subject-title">TikTok LIVE 配信予定</span>
+                  <span class="link-arrow">▶ 視聴する</span>
+                </a>
+              `;
             } else if (item.type === "動画") {
               badgeClass = "badge-video";
-              defaultTitle = "ショート動画 投稿予定";
+              contentHtml = `
+                <a href="https://www.tiktok.com/@asahi.natsuzora" target="_blank" rel="noopener noreferrer" class="timetable-link">
+                  <span class="subject-title">ショート動画 投稿予定</span>
+                  <span class="link-arrow">▶ 見に行く</span>
+                </a>
+              `;
             }
 
             row.innerHTML = `
@@ -221,7 +231,7 @@
               </div>
               <div class="timetable-detail">
                 <span class="subject-badge ${badgeClass}">${item.type}</span>
-                <span class="subject-title">${defaultTitle}</span>
+                ${contentHtml}
               </div>
             `;
             boardEl.appendChild(row);
