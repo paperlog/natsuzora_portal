@@ -173,6 +173,9 @@ footer.site-footer {
 }
 .sns-btn.tiktok { background-color: #000000; }
 .sns-btn.x-twitter { background-color: #0f1419; }
+.sns-btn.dev-btn {
+  margin-bottom: 10px;
+}
 .copyright {
   font-size: 0.8rem;
   color: #888888;

@@ -404,3 +404,8 @@ body {
     padding: 22px 14px;
   }
 }
+
+/* フッターボタン調整 */
+.sns-btn.dev-btn {
+  margin-bottom: 10px;
+}
