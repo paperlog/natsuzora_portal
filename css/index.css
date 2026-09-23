@@ -527,3 +527,29 @@ footer {
     font-size: 0.85rem;
   }
 }
+
+/* 時間割内のリンクスタイル（青色と下線を消す） */
+.timetable-link {
+  color: var(--text-dark);      /* サイト基本の文字色に統一 */
+  text-decoration: none;        /* デフォルトの下線を削除 */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+/* カーソルを乗せたとき（ホバー時）の挙動 */
+.timetable-link:hover {
+  color: var(--main-purple);    /* テーマカラーの紫にほんのり変化 */
+  opacity: 0.85;
+}
+
+/* 「▶ 視聴する / 見に行く」部分の装飾 */
+.link-arrow {
+  font-size: 0.75rem;
+  color: var(--main-purple);    /* テーマカラーの紫 */
+  font-weight: bold;
+  background: rgba(157, 142, 193, 0.12); /* うっすら紫の背景タグ風 */
+  padding: 0.15rem 0.5rem;
+  border-radius: 12px;
+}
