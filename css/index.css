@@ -347,3 +347,183 @@ footer {
   color: #888888;
   margin: 0;
 }
+
+/* 時間割セクション（Timetable）*/
+.timetable-section {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.timetable-section h2 {
+  margin-top: 0;
+  margin-bottom: 1.2rem;
+  color: var(--main-purple);
+}
+
+.timetable-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f5f2fa;
+  padding: 0.35rem 1rem;
+  border-radius: 30px;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(157, 142, 193, 0.3);
+}
+
+.timetable-class {
+  font-size: 0.75rem;
+  background: var(--main-purple);
+  color: #ffffff;
+  padding: 0.15rem 0.55rem;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.timetable-date {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #4a3b63;
+}
+
+.timetable-board {
+  max-width: 520px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.timetable-loading {
+  font-size: 0.85rem;
+  color: #888;
+  margin: 1rem 0;
+}
+
+.timetable-row {
+  display: flex;
+  align-items: center;
+  background: #faf9fd;
+  border: 1px solid #eae5f3;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.timetable-row:hover {
+  transform: translateX(3px);
+  border-color: var(--main-purple);
+}
+
+.timetable-period {
+  display: flex;
+  align-items: center;
+  min-width: 65px;
+  padding-right: 0.8rem;
+  border-right: 2px dashed #e2dceb;
+}
+
+.period-time {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #433358;
+  font-variant-numeric: tabular-nums;
+}
+
+.timetable-detail {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+  padding-left: 0.8rem;
+  text-align: left;
+  flex-wrap: wrap;
+}
+
+.subject-badge {
+  font-size: 0.72rem;
+  font-weight: bold;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.badge-live {
+  background-color: #ff4757;
+  color: #ffffff;
+}
+
+.badge-video {
+  background-color: var(--accent-yellow);
+  color: #48380b;
+}
+
+.badge-info {
+  background-color: #5352ed;
+  color: #ffffff;
+}
+
+.subject-title {
+  font-size: 0.92rem;
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+/* None / お休み時の表示 */
+.timetable-empty {
+  background: #fbfbfd;
+  border: 1px dashed #d5cde3;
+  border-radius: 10px;
+  padding: 1.5rem 1rem;
+}
+
+.timetable-empty .empty-icon {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.timetable-empty .empty-title {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #5d4a75;
+  margin: 0 0 0.3rem;
+}
+
+.timetable-empty .empty-sub {
+  font-size: 0.82rem;
+  color: #777;
+  margin: 0;
+}
+
+.timetable-note {
+  margin: 1.2rem 0 0;
+  font-size: 0.75rem;
+  color: #888888;
+}
+
+@media (max-width: 480px) {
+  .timetable-row {
+    padding: 0.65rem 0.75rem;
+  }
+  .timetable-period {
+    min-width: 55px;
+    padding-right: 0.6rem;
+  }
+  .period-time {
+    font-size: 0.88rem;
+  }
+  .timetable-detail {
+    padding-left: 0.6rem;
+    gap: 0.4rem;
+  }
+  .subject-title {
+    font-size: 0.85rem;
+  }
+}

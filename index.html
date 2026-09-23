@@ -38,6 +38,23 @@
   </header>
 
 <main class="container">
+  <!-- 時間割  -->
+  <section class="timetable-section" id="timetable">
+    <h2>📋 本日の時間割</h2>
+
+    <div class="timetable-header">
+      <span class="timetable-class">3年B組</span>
+      <span class="timetable-date" id="timetable-date">読み込み中...</span>
+    </div>
+
+    <!-- ここにJSONから読み込んだ予定が描画されます -->
+    <div class="timetable-board" id="timetable-board">
+      <p class="timetable-loading">時間割を確認中...</p>
+    </div>
+
+    <p class="timetable-note">※開始時間は多少前後する場合があります。</p>
+  </section>
+
   <!-- プロフィール紹介 -->
   <section class="profile-card">
     <h2>夏空 あさひ（Natsuzora Asahi）</h2>
@@ -122,6 +139,105 @@
     <p class="copyright">&copy; 夏空学園 非公式ファンポータル</p>
   </div>
 </footer>
+
+<!-- 時間割読み込みスクリプト -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const dateEl = document.getElementById("timetable-date");
+      const boardEl = document.getElementById("timetable-board");
+
+      // キャッシュ対策（タイムスタンプ付きfetch）
+      fetch("./timetable.json?t=" + new Date().getTime())
+        .then((res) => {
+          if (!res.ok) throw new Error("JSON読み込み失敗");
+          return res.json();
+        })
+        .then((data) => {
+          // --- 1. 日付 & 曜日の自動処理 ---
+          const days = ["日", "月", "火", "水", "木", "金", "土"];
+          const today = new Date();
+
+          if (data.date) {
+            // "9/25" などの形式なら曜日を自動付与して "9/25（金）" に変換
+            const match = String(data.date).match(/^(\d{1,2})[\/\-](\d{1,2})$/);
+            if (match) {
+              const month = parseInt(match[1], 10);
+              const day = parseInt(match[2], 10);
+              const targetDate = new Date(today.getFullYear(), month - 1, day);
+              const dayOfWeek = days[targetDate.getDay()];
+              dateEl.textContent = `${month}/${day}（${dayOfWeek}）`;
+            } else {
+              dateEl.textContent = data.date;
+            }
+          } else {
+            dateEl.textContent = `${today.getMonth() + 1}/${today.getDate()}（${days[today.getDay()]}）`;
+          }
+
+          boardEl.innerHTML = "";
+
+          // --- 2. データの正規化 ---
+          // itemsリストでも、単一オブジェクトでも受け入れ可能
+          let items = [];
+          if (Array.isArray(data.items)) {
+            items = data.items;
+          } else if (data.type) {
+            items = [{ type: data.type, time: data.time || "" }];
+          }
+
+          // None判定（空、または type が None の場合）
+          const isNone = items.length === 0 || items.some(item => item.type === "None" || !item.type);
+
+          if (isNone) {
+            boardEl.innerHTML = `
+              <div class="timetable-empty">
+                <span class="empty-icon">🎐</span>
+                <p class="empty-title">今日はお休み</p>
+                <p class="empty-sub">本日は自習日です。アーカイブを見て復習しよう！</p>
+              </div>
+            `;
+            return;
+          }
+
+          // --- 3. 予定行の自動生成 ---
+          items.forEach((item) => {
+            const row = document.createElement("div");
+            row.className = "timetable-row";
+
+            // typeに応じたバッジとデフォルト文言の設定
+            let badgeClass = "badge-info";
+            let defaultTitle = "予定あり";
+
+            if (item.type === "配信") {
+              badgeClass = "badge-live";
+              defaultTitle = "TikTok LIVE 配信予定";
+            } else if (item.type === "動画") {
+              badgeClass = "badge-video";
+              defaultTitle = "ショート動画 投稿予定";
+            }
+
+            row.innerHTML = `
+              <div class="timetable-period">
+                <span class="period-time">${item.time || "--:--"}</span>
+              </div>
+              <div class="timetable-detail">
+                <span class="subject-badge ${badgeClass}">${item.type}</span>
+                <span class="subject-title">${defaultTitle}</span>
+              </div>
+            `;
+            boardEl.appendChild(row);
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+          dateEl.textContent = "取得エラー";
+          boardEl.innerHTML = `
+            <div class="timetable-empty">
+              <p class="empty-sub">時間割の読み込みに失敗しました。</p>
+            </div>
+          `;
+        });
+    });
+  </script>
 
 </body>
 </html>
