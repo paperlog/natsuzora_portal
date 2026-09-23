@@ -197,6 +197,19 @@
             return;
           }
 
+	  const isPending = items.some(item => item.type === "未定");
+
+          if (isPending) {
+            boardEl.innerHTML = `
+              <div class="timetable-empty timetable-pending">
+                <span class="empty-icon">⏳</span>
+                <p class="empty-title">本日の配信は未定</p>
+                <p class="empty-sub">配信があるか決まり次第更新されます</p>
+              </div>
+            `;
+            return;
+          }
+
           // --- 3. 予定行の自動生成 ---
           items.forEach((item) => {
             const row = document.createElement("div");

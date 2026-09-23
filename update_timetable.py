@@ -26,7 +26,7 @@ def update_timetable(schedule_type="None", time_str="", date_str=None):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 if __name__=="__main__":
-    update_timetable(schedule_type=input("配信 or None："), time_str=input("開始時刻："))
+    update_timetable(schedule_type=input("未定 or 配信 or None："), time_str=input("開始時刻："))
 
 # --- 使い方例 ---
 # 1. 今日の配信をセットする場合
