@@ -154,6 +154,15 @@
 
 <!-- 時間割読み込みスクリプト -->
   <script>
+    function escapeHtml(str) {
+	return String(str)
+	    .replace(/&/g, "&amp;")
+	    .replace(/</g, "&lt;")
+	    .replace(/>/g, "&gt;")
+	    .replace(/"/g, "&quot;")
+	    .replace(/'/g, "&#039;");
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
       const dateEl = document.getElementById("timetable-date");
       const boardEl = document.getElementById("timetable-board");
@@ -233,10 +242,16 @@
 
             if (item.type === "配信") {
               badgeClass = "badge-live";
+
+              // titleが設定されていればそれを使い、空文字や未設定ならデフォルト文言にする
+              const displayTitle = (item.title && item.title.trim() !== "") 
+                ? item.title 
+                : "TikTok LIVE 配信予定";
+      
               // 配信時はLIVE直通リンク（またはプロフィールリンク）を付ける
               contentHtml = `
                 <a href="https://www.tiktok.com/@asahi.natsuzora/live" target="_blank" rel="noopener noreferrer" class="timetable-link">
-                  <span class="subject-title">TikTok LIVE 配信予定</span>
+                  <span class="subject-title">${escapeHtml(displayTitle)}</span>
                   <span class="link-arrow">▶ 視聴する</span>
                 </a>
               `;
