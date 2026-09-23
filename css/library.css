@@ -43,6 +43,11 @@ body {
   align-items: center;
   gap: 6px;
 }
+.sync-status .sync-count {
+  color: #ffffff;
+  margin: 0 3px;
+}
+
 .sync-dot {
   width: 8px;
   height: 8px;
@@ -117,6 +122,7 @@ body {
 }
 
 #pagerBottom {
+  margin-top: 18px;
   margin-bottom: 50px;
 }
 
@@ -384,6 +390,9 @@ body {
   padding: 30px;
   color: #7b6f8a;
   font-family: 'Shippori Mincho', serif;
+}
+.empty-message.error {
+  color: var(--stamp-red);
 }
 
 @media (max-width: 650px) {

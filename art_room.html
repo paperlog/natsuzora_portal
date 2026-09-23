@@ -37,37 +37,16 @@
     </div>
 
     <!-- 廊下展示（渡り廊下）への特別扉案内 -->
-    <div class="hallway-entrance-card" style="
-      background: linear-gradient(135deg, #fbf9fd 0%, #f0eaf7 100%);
-      border: 1.5px dashed var(--main-purple);
-      border-radius: 12px;
-      padding: 1rem 1.4rem;
-      margin-bottom: 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 8px rgba(157, 142, 193, 0.15);
-      flex-wrap: wrap;
-      gap: 10px;">
+    <div class="hallway-entrance-card">
       <div>
-        <h2 style="margin: 0 0 4px; font-size: 1rem; color: var(--text-dark); display: flex; align-items: center; gap: 6px;">
+        <h2 class="hallway-title">
           <span>🚪</span> 美術室の奥の扉：渡り廊下展示
         </h2>
-        <p style="margin: 0; font-size: 0.82rem; color: #666;">
+        <p class="hallway-desc">
           作品を額縁に入れて上から順番にダイナミックに鑑賞できる特設回廊です。
         </p>
       </div>
-      <a href="art_hallway.html" style="
-        background: var(--main-purple);
-        color: #fff;
-        text-decoration: none;
-        padding: 0.55rem 1.2rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: bold;
-        white-space: nowrap;
-        box-shadow: 0 3px 8px rgba(157, 142, 193, 0.4);
-        transition: transform 0.2s, background 0.2s;">
+      <a href="art_hallway.html" class="hallway-btn">
         廊下展示へ行く →
       </a>
     </div>
@@ -107,7 +86,7 @@
           <span>X (@asahinatsu_v)</span>
         </a>
       </div>
-      <a href="https://x.com/yuu73_39" class="sns-btn x-twitter" target="_blank" rel="noopener" style="margin-bottom: 10px;">開発者sns:不具合等はこちらに</a>
+      <a href="https://x.com/yuu73_39" class="sns-btn x-twitter dev-btn" target="_blank" rel="noopener">開発者sns:不具合等はこちらに</a>
       <p class="copyright">&copy; 夏空学園 非公式ファンポータル</p>
     </div>
   </footer>
@@ -132,7 +111,7 @@ async function initGallery() {
     grid.innerHTML = `
       <div class="empty-notice">
         <p>作品データ（art.json）を取得できませんでした。</p>
-        <p style="font-size: 0.85rem; color: #888;">ルート直下に art.json が存在するか確認してください。</p>
+        <p class="empty-notice-sub">ルート直下に art.json が存在するか確認してください。</p>
       </div>`;
     return;
   }
@@ -217,13 +196,7 @@ function renderPagination(totalPages) {
   if (!nav) {
     nav = document.createElement('div');
     nav.id = 'galleryPagination';
-    nav.style.cssText = `
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      margin: 2rem 0;
-    `;
+    nav.className = 'gallery-pagination';
     const grid = document.getElementById('galleryGrid');
     grid.parentNode.insertBefore(nav, grid.nextSibling);
   }
@@ -236,28 +209,20 @@ function renderPagination(totalPages) {
   let html = '';
   // 「前へ」ボタン
   if (currentPage > 1) {
-    html += `<button onclick="goToPage(${currentPage - 1})" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer;">← 前へ</button>`;
+    html += `<button onclick="goToPage(${currentPage - 1})" class="pagination-btn">← 前へ</button>`;
   }
 
   // ページ番号
   for (let i = 1; i <= totalPages; i++) {
     const isCurrent = i === currentPage;
     html += `
-      <button onclick="goToPage(${i})" style="
-        padding: 6px 12px;
-        border-radius: 6px;
-        border: 1px solid ${isCurrent ? 'var(--main-purple, #6c5ce7)' : '#ccc'};
-        background: ${isCurrent ? 'var(--main-purple, #6c5ce7)' : '#fff'};
-        color: ${isCurrent ? '#fff' : '#333'};
-        font-weight: ${isCurrent ? 'bold' : 'normal'};
-        cursor: pointer;
-      ">${i}</button>
+      <button onclick="goToPage(${i})" class="pagination-btn ${isCurrent ? 'active' : ''}">${i}</button>
     `;
   }
 
   // 「次へ」ボタン
   if (currentPage < totalPages) {
-    html += `<button onclick="goToPage(${currentPage + 1})" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer;">次へ →</button>`;
+    html += `<button onclick="goToPage(${currentPage + 1})" class="pagination-btn">次へ →</button>`;
   }
 
   nav.innerHTML = html;

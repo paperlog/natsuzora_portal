@@ -178,13 +178,103 @@ header::after {
   .profile-img { width: 140px; height: 140px; }
 }
 
+/* 動画エリア */
 .video-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 520px;
 }
+.video-card {
+  display: block;
+  position: relative;
+  max-width: 340px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+}
+.video-thumb {
+  width: 100%;
+  display: block;
+}
+.video-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+.video-play-icon {
+  font-size: 48px;
+}
+.video-play-badge {
+  font-weight: bold;
+  margin-top: 8px;
+  font-size: 14px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
 
+/* 落とし物コーナー */
+.lost-and-found {
+  margin-top: 32px;
+  margin-bottom: 32px;
+  text-align: center;
+  background: var(--card-bg);
+  padding: 24px 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+.lost-title {
+  font-size: 1.1rem;
+  color: #555555;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+.lost-box {
+  display: inline-block;
+  max-width: 360px;
+  width: 100%;
+  background: #f9f9f9;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px dashed #cccccc;
+  box-sizing: border-box;
+}
+.lost-link {
+  display: block;
+  text-decoration: none;
+}
+.lost-img {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  display: block;
+  margin: 0 auto 12px;
+  border-radius: 6px;
+  transition: transform 0.2s ease;
+}
+.lost-img:hover {
+  transform: scale(1.02);
+}
+.lost-desc {
+  font-size: 0.9rem;
+  color: #666666;
+  margin: 0 0 6px;
+  font-weight: 500;
+}
+.lost-note {
+  font-size: 0.75rem;
+  color: #999999;
+  margin: 0;
+}
+
+/* ハブリンク一覧 */
 .hub-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -209,6 +299,7 @@ header::after {
   color: var(--main-purple);
 }
 
+/* フッター */
 footer {
   background-color: #ffffff;
   border-top: 1px solid rgba(157, 142, 193, 0.2);
@@ -248,6 +339,9 @@ footer {
 }
 .sns-btn.tiktok { background-color: #000000; }
 .sns-btn.x-twitter { background-color: #0f1419; }
+.sns-btn.dev-btn {
+  margin-bottom: 10px;
+}
 .copyright {
   font-size: 0.8rem;
   color: #888888;

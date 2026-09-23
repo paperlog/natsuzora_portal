@@ -92,7 +92,7 @@
   </div>
 
   <!-- ページャー（下部） -->
-  <div class="pager-bar" id="pagerBottom" style="margin-top: 18px;"></div>
+  <div class="pager-bar" id="pagerBottom"></div>
 
   <script>
     const USER_STORAGE_KEY = 'natsuzora_tiktok_card_v4_full';
@@ -150,7 +150,7 @@
         document.getElementById('statusText').textContent = 'videos.json の読み込みに失敗しました';
         document.getElementById('recordTbody').innerHTML = `
           <tr>
-            <td colspan="5" class="empty-message" style="color: #c9352b;">
+            <td colspan="5" class="empty-message error">
               動画リスト（videos.json）を取得できませんでした。<br>
               リポジトリのルートに videos.json が配置されているかご確認ください。
             </td>
@@ -171,7 +171,7 @@
 
     function updateStampedCount() {
       const count = Object.values(userData.records).filter(r => r && r.isStamped).length;
-      document.getElementById('statusText').innerHTML = `全${videoCatalog.length}件中 <strong style="color: #fff; margin: 0 3px;">${count}</strong> 件読破`;
+      document.getElementById('statusText').innerHTML = `全${videoCatalog.length}件中 <strong class="sync-count">${count}</strong> 件読破`;
     }
 
     function getTotalPages() {
@@ -381,7 +381,7 @@
             clonedTitle.style.background = 'none';
             clonedTitle.style.webkitBackgroundClip = 'unset';
             clonedTitle.style.webkitTextFillColor = 'unset';
-            clonedTitle.style.color = '#382b4a'; // 上品な濃紺紫
+            clonedTitle.color = '#382b4a'; // 上品な濃紺紫
           }
 
           // 2. すべての input 要素をテキスト(span)に差し替えて文字切れを完全防止
@@ -438,7 +438,7 @@
           <span>X (@asahinatsu_v)</span>
         </a>
       </div>
-      <a href="https://x.com/yuu73_39" class="sns-btn x-twitter" target="_blank" rel="noopener" style="margin-bottom: 10px;">開発者sns:不具合等はこちらに</a>
+      <a href="https://x.com/yuu73_39" class="sns-btn x-twitter dev-btn" target="_blank" rel="noopener">開発者sns:不具合等はこちらに</a>
       <p class="copyright">&copy; 夏空学園 非公式ファンポータル</p>
     </div>
   </footer>

@@ -84,11 +84,11 @@
     <div class="preview-panel">
       <div class="preview-header">
         <span class="preview-title">リアルタイムプレビュー</span>
-        <button id="btn-download" style="padding: 6px 14px; background: #6366f1; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">画像を保存</button>
+        <button id="btn-download">画像を保存</button>
       </div>
 
       <!-- 学生証カード本体 -->
-      <div id="card-wrapper" style="width: 100%; display: flex; justify-content: center; overflow: hidden;">
+      <div id="card-wrapper">
         <div class="id-card" id="card">
           <div class="school-name" id="disp-school">夏空学園</div>
           <div class="school-sub" id="disp-sub">STUDENT ID CARD</div>
@@ -218,54 +218,54 @@
     // ==========================================
     // 2. 画像保存（ダウンロード）処理
     // ==========================================
-document.getElementById('btn-download').addEventListener('click', () => {
-  const card = document.getElementById('card');
-  const currentTransform = card.style.transform;
-  card.style.transform = 'none';
+    document.getElementById('btn-download').addEventListener('click', () => {
+      const card = document.getElementById('card');
+      const currentTransform = card.style.transform;
+      card.style.transform = 'none';
 
-  html2canvas(card, {
-    scale: 2,
-    useCORS: true // 外部アセットやWebフォントの読み込み対策
-  }).then(canvas => {
-    card.style.transform = currentTransform;
+      html2canvas(card, {
+        scale: 2,
+        useCORS: true // 外部アセットやWebフォントの読み込み対策
+      }).then(canvas => {
+        card.style.transform = currentTransform;
 
-    canvas.toBlob((blob) => {
-      if (!blob) {
-        alert('画像の生成に失敗しました。');
-        return;
-      }
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            alert('画像の生成に失敗しました。');
+            return;
+          }
 
-      const blobUrl = URL.createObjectURL(blob);
+          const blobUrl = URL.createObjectURL(blob);
 
-      // iOS Safari や アプリ内ブラウザ（LINE/X等）の判定
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-      const isInApp = /Line|FBAN|FBAV|Twitter/i.test(navigator.userAgent);
+          // iOS Safari や アプリ内ブラウザ（LINE/X等）の判定
+          const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+          const isInApp = /Line|FBAN|FBAV|Twitter/i.test(navigator.userAgent);
 
-      if (isIOS || isInApp) {
-        // ダウンロードがブロックされる環境では別タブで画像を開き、長押し保存を促す
-        const newTab = window.open(blobUrl, '_blank');
-        if (!newTab) {
-          // ポップアップブロック等で別タブが開けない場合は直接遷移
-          window.location.href = blobUrl;
-        }
-      } else {
-        // 通常のブラウザ（PC / Android Chrome 等）
-        const link = document.createElement('a');
-        link.href = blobUrl;
-        link.download = 'student-card.png';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+          if (isIOS || isInApp) {
+            // ダウンロードがブロックされる環境では別タブで画像を開き、長押し保存を促す
+            const newTab = window.open(blobUrl, '_blank');
+            if (!newTab) {
+              // ポップアップブロック等で別タブが開けない場合は直接遷移
+              window.location.href = blobUrl;
+            }
+          } else {
+            // 通常のブラウザ（PC / Android Chrome 等）
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = 'student-card.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
 
-        setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
-      }
-    }, 'image/png');
-  }).catch(err => {
-    card.style.transform = currentTransform;
-    console.error('html2canvas error:', err);
-    alert('画像の生成中にエラーが発生しました。');
-  });
-});
+            setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+          }
+        }, 'image/png');
+      }).catch(err => {
+        card.style.transform = currentTransform;
+        console.error('html2canvas error:', err);
+        alert('画像の生成中にエラーが発生しました。');
+      });
+    });
   </script>
 
   <!-- 共通フッター -->
@@ -282,7 +282,7 @@ document.getElementById('btn-download').addEventListener('click', () => {
           <span>X (@asahinatsu_v)</span>
         </a>
       </div>
-      <a href="https://x.com/yuu73_39" class="sns-btn x-twitter" target="_blank" rel="noopener" style="margin-bottom: 10px;">開発者sns:不具合等はこちらに</a>
+      <a href="https://x.com/yuu73_39" class="sns-btn x-twitter dev-btn" target="_blank" rel="noopener">開発者sns:不具合等はこちらに</a>
       <p class="copyright">&copy; 夏空学園 非公式ファンポータル</p>
     </div>
   </footer>

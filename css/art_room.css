@@ -16,6 +16,61 @@ body {
   flex-grow: 1;
 }
 
+/* 控えめな注意書き */
+.art-notice-compact {
+  margin-bottom: 1.2rem;
+  font-size: 0.8rem;
+  color: #666666;
+}
+.art-notice-compact p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* 渡り廊下展示案内カード */
+.hallway-entrance-card {
+  background: linear-gradient(135deg, #fbf9fd 0%, #f0eaf7 100%);
+  border: 1.5px dashed var(--main-purple);
+  border-radius: 12px;
+  padding: 1rem 1.4rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(157, 142, 193, 0.15);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.hallway-title {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hallway-desc {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #666666;
+}
+.hallway-btn {
+  background: var(--main-purple);
+  color: #ffffff;
+  text-decoration: none;
+  padding: 0.55rem 1.2rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  white-space: nowrap;
+  box-shadow: 0 3px 8px rgba(157, 142, 193, 0.4);
+  transition: transform 0.2s, background 0.2s;
+}
+.hallway-btn:hover {
+  transform: translateY(-2px);
+  background: #8b79b3;
+}
+
 /* トップバー（ステータス＆並び替え） */
 .gallery-topbar {
   display: flex;
@@ -88,6 +143,11 @@ body {
   color: #777;
   font-size: 0.95rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+.empty-notice-sub {
+  font-size: 0.85rem;
+  color: #888888;
+  margin-top: 6px;
 }
 
 /* 個別アートカード */
@@ -259,6 +319,39 @@ body {
   background: var(--main-purple);
   color: #ffffff;
   border-color: var(--main-purple);
+}
+
+/* ページ送りUI */
+.gallery-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 2rem 0;
+}
+.pagination-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #cccccc;
+  background: #ffffff;
+  color: #333333;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pagination-btn:hover {
+  background: #f0edf7;
+}
+.pagination-btn.active {
+  border-color: var(--main-purple);
+  background: var(--main-purple);
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* フッターボタン調整 */
+.sns-btn.dev-btn {
+  margin-bottom: 10px;
 }
 
 @media (max-width: 500px) {

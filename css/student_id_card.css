@@ -11,7 +11,7 @@ body {
   background-color: var(--bg-color);
   color: var(--text-color);
   margin: 0;
-  padding: 0; /* ← 30px 20px から 0 に変更 */
+  padding: 0;
   font-family: "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
   min-height: 100vh;
 }
@@ -101,12 +101,36 @@ body {
   color: #64748b;
 }
 
+/* プレビューヘッダーの保存ボタン */
+#btn-download {
+  padding: 6px 14px;
+  background: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: opacity 0.2s;
+}
+
+#btn-download:hover {
+  opacity: 0.9;
+}
+
+/* カード外枠ラッパー */
+#card-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
 .id-card {
   transform-origin: top center;
   position: relative;
   width: 900px;
   height: 600px;
-  background-image: url('../img/card.webp'); /* cssフォルダ内に配置するためパスを調整 */
+  background-image: url('../img/card.webp');
   background-size: cover;
   background-position: center;
   border-radius: 24px;
@@ -169,6 +193,11 @@ body {
   left: 560px;
   font-size: 22px;
   color: #2e2640;
+}
+
+/* フッターボタン調整 */
+.sns-btn.dev-btn {
+  margin-bottom: 10px;
 }
 
 @media (max-width: 1100px) {

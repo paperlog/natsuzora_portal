@@ -67,7 +67,7 @@
           <span>X (@asahinatsu_v)</span>
         </a>
       </div>
-      <a href="https://x.com/yuu73_39" class="sns-btn x-twitter" target="_blank" rel="noopener" style="margin-bottom: 10px;">開発者sns:不具合等はこちらに</a>
+      <a href="https://x.com/yuu73_39" class="sns-btn x-twitter dev-btn" target="_blank" rel="noopener">開発者sns:不具合等はこちらに</a>
       <p class="copyright">&copy; 夏空学園 非公式ファンポータル</p>
     </div>
   </footer>
@@ -108,7 +108,7 @@ async function initHallway() {
     wall.innerHTML = `
       <div class="empty-notice">
         <p>作品データ（art.json）を取得できませんでした。</p>
-        <p style="font-size: 0.85rem; color: #888;">ルート直下に art.json が存在するか確認してください。</p>
+        <p class="empty-notice-sub">ルート直下に art.json が存在するか確認してください。</p>
       </div>`;
   }
 }
@@ -117,7 +117,6 @@ async function initHallway() {
 function createSentinel() {
   const sentinel = document.createElement('div');
   sentinel.id = 'scrollSentinel';
-  sentinel.style.height = '40px'; // 判定用のわずかな高さ
 
   const wall = document.getElementById('hallwayWall');
   wall.parentNode.insertBefore(sentinel, wall.nextSibling);
