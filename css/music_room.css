@@ -1,0 +1,174 @@
+@charset "UTF-8";
+
+body {
+  background-color: var(--sky-blue);
+  color: var(--text-dark);
+  font-family: "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.page-container {
+  max-width: 800px; /* 歌詞中心のため読みやすい幅に設定 */
+  width: 100%;
+  margin: 1.5rem auto 4rem;
+  padding: 0 1rem;
+  flex-grow: 1;
+}
+
+/* 共通カード */
+.music-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 1.8rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(157, 142, 193, 0.2);
+  margin-bottom: 1.5rem;
+}
+
+/* -----------------------------
+   TikTok リンクカード
+----------------------------- */
+.tiktok-link-card {
+  background: linear-gradient(135deg, #1c1824 0%, #282236 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 6px 16px rgba(40, 34, 54, 0.2);
+}
+
+.tiktok-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.tiktok-card-info {
+  flex: 1;
+  min-width: 240px;
+}
+
+.tiktok-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.tiktok-song-title {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.tiktok-song-desc {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #d1cbdc;
+}
+
+/* TikTokリンクボタン */
+.tiktok-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #000000;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.95rem;
+  padding: 0.75rem 1.6rem;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s;
+  white-space: nowrap;
+}
+
+.tiktok-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  background: #111111;
+}
+
+/* -----------------------------
+   歌詞セクション
+----------------------------- */
+.lyrics-header {
+  border-bottom: 2px solid #ede8f5;
+  padding-bottom: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-heading {
+  margin: 0 0 0.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--text-dark);
+}
+
+.song-meta {
+  display: flex;
+  gap: 1.2rem;
+  font-size: 0.85rem;
+  color: #777;
+}
+
+/* 賞状・校旗風の枠線デザイン */
+.lyrics-body {
+  background: #fcfbfa;
+  border: 4px double #c5a059; /* 賞状・校旗の金刺繍を思わせるクラシカルな二重枠 */
+  border-radius: 8px;
+  padding: 2.2rem 2.5rem;
+  text-align: center;
+  box-shadow: inset 0 0 10px rgba(197, 160, 89, 0.08); /* 証書風のやわらかな陰影 */
+}
+
+.verse {
+  margin-bottom: 0;
+}
+
+.verse-title {
+  margin: 0 0 0.8rem;
+  font-size: 0.95rem;
+  color: var(--main-purple);
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+/* 歌詞のみ明朝体に指定 */
+.verse-text {
+  margin: 0;
+  font-family: "Noto Serif JP", "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", serif;
+  font-size: 1.08rem;
+  font-weight: 500;
+  line-height: 2.4;
+  color: #2b2633;
+  letter-spacing: 0.08em;
+}
+
+/* レスポンシブ対応（スマホ） */
+@media (max-width: 600px) {
+  .tiktok-card-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .tiktok-action-btn {
+    justify-content: center;
+  }
+  .lyrics-body {
+    padding: 1.5rem 1rem;
+    border-width: 3px;
+  }
+  .verse-text {
+    font-size: 0.96rem;
+    line-height: 2.2;
+  }
+}
