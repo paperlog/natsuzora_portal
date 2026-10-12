@@ -1,0 +1,19 @@
+<header class="site-header">
+  <div class="header-inner">
+    <div class="school-badge">
+      <span class="badge-icon">🌻</span>
+      <span class="badge-text">PRIVATE NATSUZORA ACADEMY</span>
+    </div>
+    
+    <h1 class="header-title">夏空学園 ポータル</h1>
+    <p class="header-subtitle">理事長令嬢・夏空あさひ 非公式ファンポータル</p>
+  </div>
+  
+  <nav class="header-nav">
+    <a href="index.html" class="{% if page.url == '/' or page.url contains 'index' %}active{% endif %}">🏫 ホームルーム</a>
+    <a href="student_id_card.html" class="{% if page.url contains 'student_id_card' %}active{% endif %}">🏛️  事務室</a>
+    <a href="library.html" class="{% if page.url contains 'library' %}active{% endif %}">📚 図書室</a>
+    <a href="art_room.html" class="{% if page.url contains 'art_room' %}active{% endif %}">🎨 美術室</a>
+    <a href="music_room.html" class="{% if page.url contains 'music_room' %}active{% endif %}">🎵 音楽室</a>
+</nav>
+</header>
