@@ -192,6 +192,8 @@ footer.site-footer {
   margin: 0;
 }
 
+/* ハロウィン */
+
 /* ヘッダー上部にガーランド（top_line.png）を背景として表示 */
 header.site-header {
   padding-top: 50px !important; /* ガーランド分の余白 */
@@ -205,9 +207,49 @@ header.site-header {
 
 /* フッター上部にライン（bottom_line.png）を背景として表示 */
 footer.site-footer {
-  padding-top: 45px !important;
-  background-image: url('../img/bottom_line.png'); /* パスは適宜調整 */
-  background-position: top center;
+  padding-bottom: 45px !important;
+  background-image:
+      url('../img/bottom_line.png'),
+      linear-gradient(180deg, #3a1a59 0%, #1f102e 100%);
+  background-position: bottom center;
   background-repeat: repeat-x;
   background-size: auto 35px;
+  color: #f0e6f6;
+}
+
+/* フッターの見出しラベル（夜空に映えるパンプキンイエロー） */
+.footer-label {
+  color: #ffaa33 !important;
+  font-weight: bold;
+  text-shadow: 0 1px 8px rgba(255, 170, 51, 0.4);
+}
+
+/* SNSボタン（ダーク背景に映えるよう枠線と影を強化） */
+.sns-btn {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s;
+}
+
+.sns-btn:hover {
+  transform: translateY(-2px);
+  border-color: #ffaa33;
+  box-shadow: 0 6px 16px rgba(255, 170, 51, 0.35);
+}
+
+/* 開発者連絡ボタン */
+.sns-btn.dev-btn {
+  background-color: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #f0e6f6;
+}
+
+.sns-btn.dev-btn:hover {
+  background-color: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+/* コピーライト表記（薄紫色で上品に可読性確保） */
+.copyright {
+  color: #a496b8 !important;
 }
