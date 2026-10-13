@@ -423,24 +423,33 @@ body {
 
 
 /* =======================================
-   黒板お知らせコーナー（ハロウィン仕様）
+   黒板お知らせコーナー（ハロウィン仕様）halloween
 ======================================= */
+/* 黒板お知らせコーナー（比率固定版） */
 .blackboard-section {
   margin-bottom: 2rem;
 }
 
 .blackboard {
-  /* board.png を背景に適用 */
+  /* 画像の比率（約 4:3）に固定 */
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  max-width: 560px; /* 巨大化を防ぐ適正サイズ */
+  margin: 0 auto;   /* 中央寄せ */
+
+  /* 背景画像 */
   background: url("../img/board.png") no-repeat center center;
-  background-size: 100% 100%;
-  border: none; /* 画像に木枠が付いているため元のボーダーを解除 */
-  border-radius: 8px;
+  background-size: contain; /* 縮尺を一切歪ませずに収める */
+  border: none;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-  
-  /* 上部のHAPPY HALLOWEEN文字や四隅のイラストと被らないよう余白を確保 */
-  padding: 4.5rem 3rem 4rem;
-  min-height: 220px;
+
+  /* 上下のイラスト（HAPPY HALLOWEENやお化け）を避けて中央に寄せる */
   box-sizing: border-box;
+  padding: 18% 12% 16%; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   color: #ffffff;
   text-align: center;
@@ -448,21 +457,20 @@ body {
 }
 
 .blackboard-title {
-  margin-top: 0;
-  color: #ffeaa7; /* ハロウィンらしい温かみのあるクリームイエロー */
+  margin: 0 0 0.5rem;
+  color: #ffeaa7;
   border-bottom: 1px dashed rgba(255, 255, 255, 0.4);
-  padding-bottom: 0.5rem;
-  margin-bottom: 0.8rem;
-  font-size: 1.3rem;
+  padding-bottom: 0.3rem;
+  font-size: clamp(1rem, 2.8vw, 1.3rem); /* 画面サイズに合わせて縮小 */
   letter-spacing: 0.05em;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 .blackboard-content p {
-  margin: 0.5rem 0;
-  font-size: 1.1rem;
+  margin: 0.3rem 0;
+  font-size: clamp(0.9rem, 2.5vw, 1.15rem); /* 画面サイズに合わせて縮小 */
   font-weight: bold;
-  line-height: 1.6;
+  line-height: 1.5;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
 }
 
