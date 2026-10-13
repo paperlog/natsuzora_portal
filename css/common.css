@@ -205,51 +205,50 @@ header.site-header {
   background-size: auto 45px, cover;
 }
 
-/* フッター上部にライン（bottom_line.png）を背景として表示 */
+/* =========================================
+   フッター全体を深紫にするハロウィン設定
+========================================= */
 footer.site-footer {
-  padding-bottom: 45px !important;
-  background-image:
-      url('../img/bottom_line.png'),
-      linear-gradient(180deg, #3a1a59 0%, #1f102e 100%);
-  background-position: bottom center;
-  background-repeat: repeat-x;
-  background-size: auto 35px;
-  color: #f0e6f6;
+  /* 1. 白背景を打ち消し、ヘッダーと同じ深紫グラデーションを敷く */
+  background-color: #231333 !important;
+  background-image: 
+    url('../img/bottom_line.png'), 
+    linear-gradient(180deg, #3a1a59 0%, #1f102e 100%) !important;
+  
+  /* ライン画像をフッターの一番下に配置し、残りを紫グラデーションで覆う */
+  background-position: bottom center, center !important;
+  background-repeat: repeat-x, no-repeat !important;
+  background-size: auto 35px, cover !important;
+
+  /* 下部のライン画像に文字が被らないよう下余白を確保 */
+  padding-top: 2.5rem !important;
+  padding-bottom: 55px !important;
+  
+  border-top: none !important;
+  color: #f0e6f6 !important;
 }
 
-/* フッターの見出しラベル（夜空に映えるパンプキンイエロー） */
+/* 公式SNSラベル（夜空に映えるオレンジ） */
 .footer-label {
   color: #ffaa33 !important;
   font-weight: bold;
   text-shadow: 0 1px 8px rgba(255, 170, 51, 0.4);
 }
 
-/* SNSボタン（ダーク背景に映えるよう枠線と影を強化） */
-.sns-btn {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s;
-}
-
-.sns-btn:hover {
-  transform: translateY(-2px);
-  border-color: #ffaa33;
-  box-shadow: 0 6px 16px rgba(255, 170, 51, 0.35);
-}
-
-/* 開発者連絡ボタン */
+/* 開発者ボタン（消えかけていた文字と枠線をくっきり表示） */
 .sns-btn.dev-btn {
-  background-color: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #f0e6f6;
+  background-color: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
 }
 
 .sns-btn.dev-btn:hover {
-  background-color: rgba(255, 255, 255, 0.22);
-  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.22) !important;
+  border-color: #ffaa33 !important;
 }
 
-/* コピーライト表記（薄紫色で上品に可読性確保） */
+/* コピーライト（読みやすい明るめのパープルグレー） */
 .copyright {
-  color: #a496b8 !important;
+  color: #baa8cc !important;
 }
