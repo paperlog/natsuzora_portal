@@ -244,55 +244,6 @@ body {
   color: var(--main-purple);
 }
 
-/* フッター */
-footer {
-  background-color: #ffffff;
-  border-top: 1px solid rgba(157, 142, 193, 0.2);
-  padding: 2.5rem 1rem 1.5rem;
-  margin-top: 4rem;
-  text-align: center;
-}
-.footer-label {
-  font-weight: bold;
-  color: var(--main-purple);
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
-}
-.sns-links {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-bottom: 1.5rem;
-}
-.sns-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.4rem;
-  border-radius: 50px;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 0.9rem;
-  color: #fff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.sns-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
-}
-.sns-btn.tiktok { background-color: #000000; }
-.sns-btn.x-twitter { background-color: #0f1419; }
-.sns-btn.dev-btn {
-  margin-bottom: 10px;
-}
-.copyright {
-  font-size: 0.8rem;
-  color: #888888;
-  margin: 0;
-}
-
 /* 時間割セクション */
 .timetable-section {
   background: var(--card-bg);
