@@ -196,7 +196,7 @@ footer.site-footer {
 
 /* ヘッダー上部にガーランド（top_line.png）を背景として表示 */
 header.site-header {
-  padding-top: 80px !important; /* ガーランド分の余白 */
+  padding-top: 60px !important; /* ガーランド分の余白 */
   background-image: 
     url('../img/top_line.png'), /* ガーランド画像（パスは適宜調整） */
     linear-gradient(180deg, #1f102e 0%, #3a1a59 50%, #582b7d 100%);

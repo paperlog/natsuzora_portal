@@ -420,3 +420,144 @@ body {
   padding: 0.15rem 0.5rem;
   border-radius: 12px;
 }
+
+
+/* =======================================
+   黒板お知らせコーナー（ハロウィン仕様）
+======================================= */
+.blackboard-section {
+  margin-bottom: 2rem;
+}
+
+.blackboard {
+  /* board.png を背景に適用 */
+  background: url("../img/board.png") no-repeat center center;
+  background-size: 100% 100%;
+  border: none; /* 画像に木枠が付いているため元のボーダーを解除 */
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  
+  /* 上部のHAPPY HALLOWEEN文字や四隅のイラストと被らないよう余白を確保 */
+  padding: 4.5rem 3rem 4rem;
+  min-height: 220px;
+  box-sizing: border-box;
+
+  color: #ffffff;
+  text-align: center;
+  font-family: "Hiragino Maru Gothic ProN", "Kosugi Maru", "Rounded Mplus 1c", sans-serif;
+}
+
+.blackboard-title {
+  margin-top: 0;
+  color: #ffeaa7; /* ハロウィンらしい温かみのあるクリームイエロー */
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.4);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
+  font-size: 1.3rem;
+  letter-spacing: 0.05em;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.blackboard-content p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+  line-height: 1.6;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.blackboard .highlight {
+  color: #ffffb3;
+  font-weight: bold;
+}
+
+.blackboard .cheer-text {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ffdfba;
+  margin-top: 1rem;
+  display: inline-block;
+  border: 2px solid #ffdfba;
+  padding: 0.3rem 1.2rem;
+  border-radius: 30px;
+  transform: rotate(-2deg);
+}
+
+/* スマホ表示時の黒板の余白調整 */
+@media (max-width: 480px) {
+  .blackboard {
+    padding: 3.5rem 1.2rem 3rem;
+    min-height: 180px;
+  }
+  .blackboard-title {
+    font-size: 1.1rem;
+  }
+  .blackboard-content p {
+    font-size: 0.95rem;
+  }
+}
+
+
+/* =======================================
+   プロフィール画像（ハロウィンリース仕様）
+======================================= */
+.profile-img-wrapper {
+  margin: 1.5rem auto 1rem;
+  position: relative;
+  width: 220px;
+  height: 220px;
+  /* リースのはみ出し飾り（カボチャや葉）を切らないよう overflow を visible に */
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+/* ホバー時に枠全体がふわっと拡大 */
+.profile-img-wrapper:hover {
+  transform: scale(1.05);
+}
+
+/* あさひちゃんのアイコン画像をリースの丸枠の中に収める */
+.profile-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 68%;
+  height: 68%;
+  border-radius: 50%; /* アイコン部分のみを丸く切り抜く */
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+/* ホバー用画像（おしゃぶり顔）の切り替え */
+.profile-img.img-hover {
+  opacity: 0;
+}
+
+.profile-img-wrapper:hover .profile-img.img-hover {
+  opacity: 1;
+}
+
+/* 前面に circle.png（リース）を重ねて表示 */
+.profile-img-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("../img/circle.png") no-repeat center center / contain;
+  pointer-events: none; /* ホバーやクリックの邪魔をしない */
+  z-index: 2;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.12));
+}
+
+/* スマホ表示のサイズ調整 */
+@media (max-width: 480px) {
+  .profile-img-wrapper {
+    width: 170px;
+    height: 170px;
+  }
+}
