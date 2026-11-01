@@ -192,35 +192,29 @@ footer.site-footer {
   margin: 0;
 }
 
-/* ハロウィン */
 
-/* ヘッダー上部にガーランド（top_line.png）を背景として表示 */
+/* ハロウィン
+
 header.site-header {
-  padding-top: 60px !important; /* ガーランド分の余白 */
+  padding-top: 60px !important;
   background-image: 
-    url('../img/top_line.png'), /* ガーランド画像（パスは適宜調整） */
+    url('../img/top_line.png'),
     linear-gradient(180deg, #1f102e 0%, #3a1a59 50%, #582b7d 100%);
   background-position: top center, center;
   background-repeat: repeat-x, no-repeat;
   background-size: auto 45px, cover;
 }
 
-/* =========================================
-   フッター全体を深紫にするハロウィン設定
-========================================= */
 footer.site-footer {
-  /* 1. 白背景を打ち消し、ヘッダーと同じ深紫グラデーションを敷く */
   background-color: #231333 !important;
   background-image: 
     url('../img/bottom_line.png'), 
     linear-gradient(180deg, #3a1a59 0%, #1f102e 100%) !important;
   
-  /* ライン画像をフッターの一番下に配置し、残りを紫グラデーションで覆う */
   background-position: bottom center, center !important;
   background-repeat: repeat-x, no-repeat !important;
   background-size: auto 35px, cover !important;
 
-  /* 下部のライン画像に文字が被らないよう下余白を確保 */
   padding-top: 2.5rem !important;
   padding-bottom: 55px !important;
   
@@ -228,14 +222,12 @@ footer.site-footer {
   color: #f0e6f6 !important;
 }
 
-/* 公式SNSラベル（夜空に映えるオレンジ） */
 .footer-label {
   color: #ffaa33 !important;
   font-weight: bold;
   text-shadow: 0 1px 8px rgba(255, 170, 51, 0.4);
 }
 
-/* 開発者ボタン（消えかけていた文字と枠線をくっきり表示） */
 .sns-btn.dev-btn {
   background-color: rgba(255, 255, 255, 0.12) !important;
   border: 1px solid rgba(255, 255, 255, 0.3) !important;
@@ -248,7 +240,8 @@ footer.site-footer {
   border-color: #ffaa33 !important;
 }
 
-/* コピーライト（読みやすい明るめのパープルグレー） */
 .copyright {
   color: #baa8cc !important;
 }
+
+*/

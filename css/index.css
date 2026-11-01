@@ -424,26 +424,22 @@ body {
 
 /* =======================================
    黒板お知らせコーナー（ハロウィン仕様）halloween
-======================================= */
-/* 黒板お知らせコーナー（比率固定版） */
+======================================= 
 .blackboard-section {
   margin-bottom: 2rem;
 }
 
 .blackboard {
-  /* 画像の比率（約 4:3）に固定 */
   aspect-ratio: 4 / 3;
   width: 100%;
-  max-width: 560px; /* 巨大化を防ぐ適正サイズ */
-  margin: 0 auto;   /* 中央寄せ */
+  max-width: 560px;
+  margin: 0 auto;
 
-  /* 背景画像 */
   background: url("../img/board.png") no-repeat center center;
-  background-size: contain; /* 縮尺を一切歪ませずに収める */
+  background-size: contain;
   border: none;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 
-  /* 上下のイラスト（HAPPY HALLOWEENやお化け）を避けて中央に寄せる */
   box-sizing: border-box;
   padding: 18% 12% 16%; 
   display: flex;
@@ -461,14 +457,14 @@ body {
   color: #ffeaa7;
   border-bottom: 1px dashed rgba(255, 255, 255, 0.4);
   padding-bottom: 0.3rem;
-  font-size: clamp(1rem, 2.8vw, 1.3rem); /* 画面サイズに合わせて縮小 */
+  font-size: clamp(1rem, 2.8vw, 1.3rem);
   letter-spacing: 0.05em;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 .blackboard-content p {
   margin: 0.3rem 0;
-  font-size: clamp(0.9rem, 2.5vw, 1.15rem); /* 画面サイズに合わせて縮小 */
+  font-size: clamp(0.9rem, 2.5vw, 1.15rem);
   font-weight: bold;
   line-height: 1.5;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
@@ -491,7 +487,6 @@ body {
   transform: rotate(-2deg);
 }
 
-/* スマホ表示時の黒板の余白調整 */
 @media (max-width: 480px) {
   .blackboard {
     padding: 3.5rem 1.2rem 3rem;
@@ -505,16 +500,11 @@ body {
   }
 }
 
-
-/* =======================================
-   プロフィール画像（ハロウィンリース仕様）
-======================================= */
 .profile-img-wrapper {
   margin: 1.5rem auto 1rem;
   position: relative;
   width: 220px;
   height: 220px;
-  /* リースのはみ出し飾り（カボチャや葉）を切らないよう overflow を visible に */
   border: none;
   border-radius: 0;
   box-shadow: none;
@@ -523,12 +513,10 @@ body {
   cursor: pointer;
 }
 
-/* ホバー時に枠全体がふわっと拡大 */
 .profile-img-wrapper:hover {
   transform: scale(1.05);
 }
 
-/* あさひちゃんのアイコン画像をリースの丸枠の中に収める */
 .profile-img {
   position: absolute;
   top: 50%;
@@ -536,13 +524,12 @@ body {
   transform: translate(-50%, -50%);
   width: 68%;
   height: 68%;
-  border-radius: 50%; /* アイコン部分のみを丸く切り抜く */
+  border-radius: 50%;
   object-fit: cover;
   transition: opacity 0.3s ease;
   z-index: 1;
 }
 
-/* ホバー用画像（おしゃぶり顔）の切り替え */
 .profile-img.img-hover {
   opacity: 0;
 }
@@ -551,21 +538,21 @@ body {
   opacity: 1;
 }
 
-/* 前面に circle.png（リース）を重ねて表示 */
 .profile-img-wrapper::after {
   content: "";
   position: absolute;
   inset: 0;
   background: url("../img/circle.png") no-repeat center center / contain;
-  pointer-events: none; /* ホバーやクリックの邪魔をしない */
+  pointer-events: none;
   z-index: 2;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.12));
 }
 
-/* スマホ表示のサイズ調整 */
 @media (max-width: 480px) {
   .profile-img-wrapper {
     width: 170px;
     height: 170px;
   }
 }
+
+*/
